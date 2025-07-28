@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Admin - Vote Count</title>
+</head>
+<body style="text-align:center;">
+  <h1>Live Results</h1>
+  <div id="results"></div>
+
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyAbMIWf8uq3dCrdAA--2gVHy2p88TYlVFs",
+      authDomain: "cloud-b7c71.firebaseapp.com",
+      projectId: "cloud-b7c71",
+      storageBucket: "cloud-b7c71.appspot.com",
+      messagingSenderId: "535763561760",
+      appId: "1:535763561760:web:2836216037604ab9fcfb45"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
+    db.collection("votes").onSnapshot(snapshot => {
+      let counts = { "Party A": 0, "Party B": 0, "NOTA": 0 };
+      snapshot.forEach(doc => {
+        const vote = doc.data().vote;
+        if (counts[vote] !== undefined) counts[vote]++;
+      });
+
+      document.getElementById("results").innerHTML = `
+        <p>🟢 Party A: ${counts["Party A"]}</p>
+        <p>🔵 Party B: ${counts["Party B"]}</p>
+        <p>⚪ NOTA: ${counts["NOTA"]}</p>
+      `;
+    });
+  </script>
+</body>
+</html>

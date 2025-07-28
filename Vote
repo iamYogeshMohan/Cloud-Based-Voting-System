@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Vote</title>
+  <style>
+    body {
+      text-align: center;
+      font-family: sans-serif;
+    }
+    button {
+      padding: 10px;
+      margin: 10px;
+      font-size: 18px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Vote Now</h1>
+  <button onclick="submitVote('Party A')">Party A</button>
+  <button onclick="submitVote('Party B')">Party B</button>
+  <button onclick="submitVote('NOTA')">NOTA</button>
+
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyAbMIWf8uq3dCrdAA--2gVHy2p88TYlVFs",
+      authDomain: "cloud-b7c71.firebaseapp.com",
+      projectId: "cloud-b7c71",
+      storageBucket: "cloud-b7c71.appspot.com",
+      messagingSenderId: "535763561760",
+      appId: "1:535763561760:web:2836216037604ab9fcfb45"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+    const auth = firebase.auth();
+
+    firebase.auth().onAuthStateChanged(user => {
+      if (!user) {
+        window.location.href = "index.html";
+      }
+    });
+
+    function submitVote(party) {
+      const user = firebase.auth().currentUser;
+      if (!user) return alert("Login again");
+
+      const voteRef = db.collection("votes").doc(user.uid);
+      voteRef.get().then(doc => {
+        if (doc.exists) {
+          alert("You already voted!");
+        } else {
+          voteRef.set({ vote: party }).then(() => {
+            alert("Thanks for voting!");
+            window.location.href = "thanks.html";
+          });
+        }
+      });
+    }
+  </script>
+</body>
+</html>

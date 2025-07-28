@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Login - Cloud Voting</title>
+  <style>
+    body {
+      font-family: Arial;
+      background: #f0f0f0;
+      text-align: center;
+      padding-top: 50px;
+    }
+    input, button {
+      padding: 10px;
+      margin: 5px;
+    }
+  </style>
+</head>
+<body>
+  <h2>Login / Register</h2>
+  <input type="email" id="email" placeholder="Email"><br>
+  <input type="password" id="password" placeholder="Password"><br>
+  <button onclick="register()">Register</button>
+  <button onclick="login()">Login</button>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyAbMIWf8uq3dCrdAA--2gVHy2p88TYlVFs",
+      authDomain: "cloud-b7c71.firebaseapp.com",
+      projectId: "cloud-b7c71",
+      storageBucket: "cloud-b7c71.appspot.com",
+      messagingSenderId: "535763561760",
+      appId: "1:535763561760:web:2836216037604ab9fcfb45",
+      measurementId: "G-XYPW6XVQGG"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+
+    function register() {
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+      auth.createUserWithEmailAndPassword(email, password)
+        .then(() => alert("Registered!"))
+        .catch(e => alert(e.message));
+    }
+
+    function login() {
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+      auth.signInWithEmailAndPassword(email, password)
+        .then(user => {
+          if (email === "admin@gmail.com") {
+            window.location.href = "admin.html";
+          } else {
+            window.location.href = "vote.html";
+          }
+        })
+        .catch(e => alert("Login Failed: " + e.message));
+    }
+  </script>
+</body>
+</html>
